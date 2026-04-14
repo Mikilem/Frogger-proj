@@ -10,26 +10,38 @@ public class GameManager : MonoBehaviour
     [SerializeField] private Home[] homes;
     [SerializeField] private Frogger frogger;
     [SerializeField] private GameObject gameOverMenu;
+
+    [Header("UI")]
     [SerializeField] private Text timeText;
     [SerializeField] private Text livesText;
     [SerializeField] private Text scoreText;
+    [SerializeField] private Text coinsText; // 🪙 NUEVO
 
     public int lives { get; private set; } = 3;
     public int score { get; private set; } = 0;
     public int time { get; private set; } = 30;
 
+    public int coins { get; private set; } = 0; // 🪙 NUEVO
+
     private void Awake()
     {
-        if (Instance != null) {
+        if (Instance != null)
+        {
             DestroyImmediate(gameObject);
-        } else {
+        }
+        else
+        {
             Instance = this;
         }
+
+        // 🪙 Cargar monedas guardadas (opcional)
+        coins = PlayerPrefs.GetInt("Coins", 0);
     }
 
     private void OnDestroy()
     {
-        if (Instance == this) {
+        if (Instance == this)
+        {
             Instance = null;
         }
     }
@@ -37,6 +49,7 @@ public class GameManager : MonoBehaviour
     private void Start()
     {
         NewGame();
+        UpdateCoinsUI(); // 🪙 actualizar UI al iniciar
     }
 
     private void NewGame()
@@ -50,7 +63,8 @@ public class GameManager : MonoBehaviour
 
     private void NewLevel()
     {
-        for (int i = 0; i < homes.Length; i++) {
+        for (int i = 0; i < homes.Length; i++)
+        {
             homes[i].enabled = false;
         }
 
@@ -85,9 +99,12 @@ public class GameManager : MonoBehaviour
     {
         SetLives(lives - 1);
 
-        if (lives > 0) {
+        if (lives > 0)
+        {
             Invoke(nameof(Respawn), 1f);
-        } else {
+        }
+        else
+        {
             Invoke(nameof(GameOver), 1f);
         }
     }
@@ -107,7 +124,8 @@ public class GameManager : MonoBehaviour
 
         while (!playAgain)
         {
-            if (Input.GetKeyDown(KeyCode.Return)) {
+            if (Input.GetKeyDown(KeyCode.Return))
+            {
                 playAgain = true;
             }
 
@@ -127,12 +145,17 @@ public class GameManager : MonoBehaviour
         frogger.gameObject.SetActive(false);
 
         int bonusPoints = time * 20;
-        SetScore(score + bonusPoints + 50);
+        SetScore(score + bonusPoints + 0);
+
+        AddCoins(10); // 🪙 monedas por llegar a casa
 
         if (Cleared())
         {
             SetLives(lives + 1);
             SetScore(score + 1000);
+
+            AddCoins(50); // 🪙 bonus por completar nivel
+
             Invoke(nameof(NewLevel), 1f);
         }
         else
@@ -145,7 +168,8 @@ public class GameManager : MonoBehaviour
     {
         for (int i = 0; i < homes.Length; i++)
         {
-            if (!homes[i].enabled) {
+            if (!homes[i].enabled)
+            {
                 return false;
             }
         }
@@ -165,4 +189,21 @@ public class GameManager : MonoBehaviour
         livesText.text = lives.ToString();
     }
 
+    // 🪙 SISTEMA DE MONEDAS
+    private void AddCoins(int amount)
+    {
+        coins += amount;
+        UpdateCoinsUI();
+
+        // guardar monedas
+        PlayerPrefs.SetInt("Coins", coins);
+    }
+
+    private void UpdateCoinsUI()
+    {
+        if (coinsText != null)
+        {
+            coinsText.text = coins.ToString();
+        }
+    }
 }
