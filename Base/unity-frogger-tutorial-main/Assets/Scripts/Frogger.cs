@@ -9,6 +9,8 @@ public class Frogger : MonoBehaviour
     public Sprite deadSprite;
 
     private SpriteRenderer spriteRenderer;
+
+
     private Vector3 spawnPosition;
     private float farthestRow;
     private bool cooldown;

@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using UnityEditor;
+using UnityEngine;
 
 public class MoveCycle : MonoBehaviour
 {
@@ -13,6 +14,9 @@ public class MoveCycle : MonoBehaviour
     {
         leftEdge = Camera.main.ViewportToWorldPoint(Vector3.zero);
         rightEdge = Camera.main.ViewportToWorldPoint(Vector3.right);
+
+
+       
     }
 
     private void Update()
@@ -29,6 +33,8 @@ public class MoveCycle : MonoBehaviour
         else {
             transform.Translate(speed * Time.deltaTime * direction);
         }
+
+        
     }
 
 }
