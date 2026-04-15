@@ -15,41 +15,31 @@ public class GameManager : MonoBehaviour
     [SerializeField] private Text timeText;
     [SerializeField] private Text livesText;
     [SerializeField] private Text scoreText;
-    [SerializeField] private Text coinsText; // 🪙 NUEVO
+    [SerializeField] private Text coinsText;
 
     public int lives { get; private set; } = 3;
     public int score { get; private set; } = 0;
     public int time { get; private set; } = 30;
-
-    public int coins { get; private set; } = 0; // 🪙 NUEVO
+    public int coins { get; private set; } = 0;
 
     private void Awake()
     {
         if (Instance != null)
         {
-            DestroyImmediate(gameObject);
-        }
-        else
-        {
-            Instance = this;
+            Destroy(gameObject);
+            return;
         }
 
-        // 🪙 Cargar monedas guardadas (opcional)
+        Instance = this;
+
+        // cargar monedas
         coins = PlayerPrefs.GetInt("Coins", 0);
-    }
-
-    private void OnDestroy()
-    {
-        if (Instance == this)
-        {
-            Instance = null;
-        }
     }
 
     private void Start()
     {
         NewGame();
-        UpdateCoinsUI(); // 🪙 actualizar UI al iniciar
+        UpdateCoinsUI();
     }
 
     private void NewGame()
@@ -58,15 +48,16 @@ public class GameManager : MonoBehaviour
 
         SetScore(0);
         SetLives(3);
+
+        UpdateCoinsUI(); // importante
+
         NewLevel();
     }
 
     private void NewLevel()
     {
         for (int i = 0; i < homes.Length; i++)
-        {
             homes[i].enabled = false;
-        }
 
         Respawn();
     }
@@ -87,7 +78,6 @@ public class GameManager : MonoBehaviour
         while (time > 0)
         {
             yield return new WaitForSeconds(1);
-
             time--;
             timeText.text = time.ToString();
         }
@@ -100,13 +90,9 @@ public class GameManager : MonoBehaviour
         SetLives(lives - 1);
 
         if (lives > 0)
-        {
             Invoke(nameof(Respawn), 1f);
-        }
         else
-        {
             Invoke(nameof(GameOver), 1f);
-        }
     }
 
     private void GameOver()
@@ -120,19 +106,16 @@ public class GameManager : MonoBehaviour
 
     private IEnumerator CheckForPlayAgain()
     {
-        bool playAgain = false;
-
-        while (!playAgain)
+        while (true)
         {
             if (Input.GetKeyDown(KeyCode.Return))
             {
-                playAgain = true;
+                NewGame();
+                yield break;
             }
 
             yield return null;
         }
-
-        NewGame();
     }
 
     public void AdvancedRow()
@@ -145,16 +128,16 @@ public class GameManager : MonoBehaviour
         frogger.gameObject.SetActive(false);
 
         int bonusPoints = time * 20;
-        SetScore(score + bonusPoints + 0);
+        SetScore(score + bonusPoints);
 
-        AddCoins(10); // 🪙 monedas por llegar a casa
+        AddCoins(10); // 🟡 monedas por llegar a casa
 
         if (Cleared())
         {
             SetLives(lives + 1);
             SetScore(score + 1000);
 
-            AddCoins(50); // 🪙 bonus por completar nivel
+            AddCoins(50); // 🟡 bonus nivel
 
             Invoke(nameof(NewLevel), 1f);
         }
@@ -167,43 +150,38 @@ public class GameManager : MonoBehaviour
     private bool Cleared()
     {
         for (int i = 0; i < homes.Length; i++)
-        {
             if (!homes[i].enabled)
-            {
                 return false;
-            }
-        }
 
         return true;
     }
 
-    private void SetScore(int score)
+    private void SetScore(int value)
     {
-        this.score = score;
+        score = value;
         scoreText.text = score.ToString();
     }
 
-    private void SetLives(int lives)
+    private void SetLives(int value)
     {
-        this.lives = lives;
+        lives = value;
         livesText.text = lives.ToString();
     }
 
-    // 🪙 SISTEMA DE MONEDAS
-    private void AddCoins(int amount)
+    // 🟡 SISTEMA DE MONEDAS FIX
+    public void AddCoins(int amount)
     {
         coins += amount;
+
         UpdateCoinsUI();
 
-        // guardar monedas
         PlayerPrefs.SetInt("Coins", coins);
+        PlayerPrefs.Save(); // IMPORTANTE
     }
 
     private void UpdateCoinsUI()
     {
         if (coinsText != null)
-        {
             coinsText.text = coins.ToString();
-        }
     }
 }
