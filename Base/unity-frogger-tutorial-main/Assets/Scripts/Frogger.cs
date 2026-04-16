@@ -6,7 +6,7 @@ public class Frogger : MonoBehaviour
 {
     public Sprite idleSprite;
     public Sprite leapSprite;
-    public Sprite deadSprite;
+    public Sprite deadSprite;       
 
     private SpriteRenderer spriteRenderer;
 

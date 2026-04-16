@@ -130,14 +130,14 @@ public class GameManager : MonoBehaviour
         int bonusPoints = time * 20;
         SetScore(score + bonusPoints);
 
-        AddCoins(10); // 🟡 monedas por llegar a casa
+        AddCoins(10); //  monedas por llegar a casa
 
         if (Cleared())
         {
             SetLives(lives + 1);
             SetScore(score + 1000);
 
-            AddCoins(50); // 🟡 bonus nivel
+            AddCoins(50); //  bonus nivel
 
             Invoke(nameof(NewLevel), 1f);
         }
@@ -168,7 +168,7 @@ public class GameManager : MonoBehaviour
         livesText.text = lives.ToString();
     }
 
-    // 🟡 SISTEMA DE MONEDAS FIX
+    // SISTEMA DE MONEDAS FIX
     public void AddCoins(int amount)
     {
         coins += amount;
