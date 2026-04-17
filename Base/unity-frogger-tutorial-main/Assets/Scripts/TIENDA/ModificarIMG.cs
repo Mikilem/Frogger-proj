@@ -13,48 +13,53 @@ public class ImageChanger : MonoBehaviour
 
     void Start()
     {
-        // Asegurarse de que haya imágenes para mostrar
-        if (images.Length > 0)
+        // Validar referencias
+        if (displayImage == null || images == null || images.Length == 0 || nextButton == null || prevButton == null)
         {
-            displayImage.sprite = images[currentIndex];  // Asignar la primera imagen al inicio
+            Debug.LogError("Faltan referencias en ImageChanger. Revisa el Inspector.");
+            return;
         }
 
-        // Agregar listeners a los botones
+        // Asignar la primera imagen
+        displayImage.sprite = images[currentIndex];
+
+        //// Limpiar listeners previos y agregar los nuevos
+        //nextButton.onClick.RemoveAllListeners();
+        //prevButton.onClick.RemoveAllListeners();
+
+    }
+
+    private void OnEnable()
+    {
         nextButton.onClick.AddListener(NextImage);
         prevButton.onClick.AddListener(PreviousImage);
+    }
+
+    private void OnDisable()
+    {
+        nextButton.onClick.RemoveListener(NextImage);
+        prevButton.onClick.RemoveListener(PreviousImage);
     }
 
     // Método para cambiar a la siguiente imagen
     void NextImage()
     {
-        if (currentIndex < images.Length - 1)
-        {
-            currentIndex++;
-        }
-        else
-        {
-            currentIndex = 0;  // Vuelve a la primera imagen si se llega al final
-        }
+        currentIndex = (currentIndex + 1) % images.Length;  // Ciclo circular
         UpdateImage();
     }
 
     // Método para mostrar la imagen anterior
     void PreviousImage()
     {
-        if (currentIndex > 0)
-        {
-            currentIndex--;
-        }
-        else
-        {
-            currentIndex = images.Length - 1;  // Vuelve a la última imagen si se está en la primera
-        }
+        currentIndex--;
+        if (currentIndex < 0)
+            currentIndex = images.Length - 1;  // Ir al último si se pasa del inicio
         UpdateImage();
     }
 
     // Método para actualizar la imagen mostrada
     void UpdateImage()
     {
-        displayImage.sprite = images[currentIndex];  // Actualizar la imagen mostrada
+        displayImage.sprite = images[currentIndex];
     }
 }
