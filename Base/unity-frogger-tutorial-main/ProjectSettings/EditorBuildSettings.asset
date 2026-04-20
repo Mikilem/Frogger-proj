@@ -8,4 +8,13 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/MENUS/Scenes/Main menu.unity
     guid: 8a35e8c3e36fda84db576204b6954c39
+  - enabled: 1
+    path: Assets/MENUS/Scenes/ModeSelect.unity
+    guid: d5fde8f26e60af24b941dddf5f3369b8
+  - enabled: 1
+    path: Assets/MENUS/Scenes/LevelsMode.unity
+    guid: 3bf48cf73fb424146b573a60960350e1
+  - enabled: 1
+    path: Assets/MENUS/Scenes/SinRoundMode.unity
+    guid: fbc3989d9cd544b4fb18b62e428c96cd
   m_configObjects: {}
