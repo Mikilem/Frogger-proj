@@ -9,7 +9,10 @@ public class ImageChanger : MonoBehaviour
     [SerializeField] private Button nextButton;   // Botón para siguiente imagen
     [SerializeField] private Button prevButton;   // Botón para imagen anterior
 
-    private int currentIndex = 0;  // Índice de la imagen actual
+    public int currentIndex = 0;  // Índice de la imagen actual
+
+    // Esto permite que otros lean el valor, pero solo este script lo cambie
+    // public int CurrentIndex => currentIndex;
 
     void Start()
     {

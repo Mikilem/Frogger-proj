@@ -1,11 +1,15 @@
 ﻿using System.Collections;
+using System.IO;
 using UnityEngine;
 using UnityEngine.UI;
+
 
 [DefaultExecutionOrder(-1)]
 public class GameManager : MonoBehaviour
 {
     public static GameManager Instance { get; private set; }
+
+
 
     [SerializeField] private Home[] homes;
     [SerializeField] private Frogger frogger;
@@ -96,13 +100,16 @@ public class GameManager : MonoBehaviour
     }
 
     private void GameOver()
-    {
-        frogger.gameObject.SetActive(false);
-        gameOverMenu.SetActive(true);
+{
+    frogger.gameObject.SetActive(false);
+    gameOverMenu.SetActive(true);
 
-        StopAllCoroutines();
-        StartCoroutine(CheckForPlayAgain());
-    }
+    // LLAMADA IMPORTANTE:
+    SaveGameToJSON(); 
+
+    StopAllCoroutines();
+    StartCoroutine(CheckForPlayAgain());
+}
 
     private IEnumerator CheckForPlayAgain()
     {
@@ -183,5 +190,52 @@ public class GameManager : MonoBehaviour
     {
         if (coinsText != null)
             coinsText.text = coins.ToString();
+    }
+
+
+
+
+
+    public void SaveGameToJSON()
+    {
+        // 1. Creamos el contenedor de datos
+        PlayerData data = new PlayerData();
+        data.coins = this.coins;
+        data.score = this.score;
+
+        // 2. BUSQUEDA SEGURA: Intentamos buscar el ImageChanger
+        ImageChanger scriptImagen = FindObjectOfType<ImageChanger>();
+
+        if (scriptImagen != null)
+        {
+            // Si lo encuentra, guardamos su índice
+            data.currentSkin = scriptImagen.currentIndex;
+        }
+        else
+        {
+            // Si NO lo encuentra (porque el objeto está desactivado o no existe),
+            // guardamos un valor por defecto (0) y avisamos en consola
+            data.currentSkin = 0;
+            Debug.LogWarning("No se encontró ImageChanger en la escena. Se guardó skin 0 por defecto.");
+        }
+
+        data.lastSave = System.DateTime.Now.ToString();
+
+        // 3. Convertir y guardar
+        string json = JsonUtility.ToJson(data, true);
+        string path = Path.Combine(Application.persistentDataPath, "player_save.json");
+
+        File.WriteAllText(path, json);
+
+        Debug.Log("¡Éxito! Archivo JSON creado en: " + path);
+    }
+
+    private void Update()
+    {
+        // Si presionas la tecla S en el teclado, se guardará el juego
+        if (Input.GetKeyDown(KeyCode.S))
+        {
+            SaveGameToJSON();
+        }
     }
 }
