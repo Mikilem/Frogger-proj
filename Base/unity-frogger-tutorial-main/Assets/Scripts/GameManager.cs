@@ -1,6 +1,8 @@
 ﻿using System.Collections;
 using System.IO;
+using System.Text;
 using UnityEngine;
+using UnityEngine.Networking;
 using UnityEngine.UI;
 
 
@@ -14,6 +16,17 @@ public class GameManager : MonoBehaviour
     [SerializeField] private Home[] homes;
     [SerializeField] private Frogger frogger;
     [SerializeField] private GameObject gameOverMenu;
+
+
+
+    [Header("MongoDB Config")]
+    [SerializeField] private string mongoUrl = "mongodb+srv://a23sersansan_db_user:<db_password>@cluster0.qp4mqk8.mongodb.net/?appName=Cluster0";
+    [SerializeField] private string apiKey = "al-5YpeV67mL_wvk-kaa-yoASlZbv-D-s6MeyWfrYJYSE-";
+    [SerializeField] private string clusterName = "Cluster0";
+    [SerializeField] private string databaseName = "GameDB";
+    [SerializeField] private string collectionName = "Players";
+
+
 
     [Header("UI")]
     [SerializeField] private Text timeText;
@@ -229,6 +242,41 @@ public class GameManager : MonoBehaviour
 
         Debug.Log("¡Éxito! Archivo JSON creado en: " + path);
     }
+
+
+    public void EnviarArchivoJSONaMongoDB()
+    {
+        string path = Path.Combine(Application.persistentDataPath, "player_save.json");
+
+        if (File.Exists(path))
+        {
+            string jsonContent = File.ReadAllText(path);
+            StartCoroutine(PostToMongoDB(jsonContent));
+        }
+    }
+
+    IEnumerator PostToMongoDB(string jsonDocument)
+    {
+        string combinedJson = $"{{\"collection\":\"{collectionName}\",\"database\":\"{databaseName}\",\"dataSource\":\"{clusterName}\",\"document\":{jsonDocument}}}";
+
+        UnityWebRequest request = new UnityWebRequest(mongoUrl, "POST");
+        byte[] bodyRaw = Encoding.UTF8.GetBytes(combinedJson);
+        request.uploadHandler = new UploadHandlerRaw(bodyRaw);
+        request.downloadHandler = new DownloadHandlerBuffer();
+
+        request.SetRequestHeader("Content-Type", "application/json");
+        request.SetRequestHeader("api-key", apiKey);
+
+        yield return request.SendWebRequest();
+
+        if (request.result == UnityWebRequest.Result.Success)
+            Debug.Log("¡Datos enviados a MongoDB!");
+        else
+            Debug.LogError("Error MongoDB: " + request.downloadHandler.text);
+    }
+
+
+
 
     private void Update()
     {
