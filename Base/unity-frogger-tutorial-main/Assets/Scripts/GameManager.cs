@@ -1,12 +1,9 @@
 ﻿using System.Collections;
-// using System.IO;
-// using System.Text;
+using System.IO;
 using UnityEngine;
-// using UnityEngine.Networking;
 using UnityEngine.UI;
+using MongoDB.Bson;
 
-
-[DefaultExecutionOrder(-1)]
 public class GameManager : MonoBehaviour
 {
     public static GameManager Instance { get; private set; }
@@ -14,7 +11,6 @@ public class GameManager : MonoBehaviour
     [SerializeField] private Home[] homes;
     [SerializeField] private Frogger frogger;
     [SerializeField] private GameObject gameOverMenu;
-
 
     [Header("UI")]
     [SerializeField] private Text timeText;
@@ -27,6 +23,8 @@ public class GameManager : MonoBehaviour
     public int time { get; private set; } = 30;
     public int coins { get; private set; } = 0;
 
+    private ConnectMongoDB mongoDbConnector; // Referencia al script ConnectMongoDB
+
     private void Awake()
     {
         if (Instance != null)
@@ -37,6 +35,13 @@ public class GameManager : MonoBehaviour
 
         Instance = this;
         coins = PlayerPrefs.GetInt("Coins", 0);
+
+        // Obtener el componente ConnectMongoDB
+        mongoDbConnector = FindObjectOfType<ConnectMongoDB>();
+        if (mongoDbConnector == null)
+        {
+            Debug.LogError("No se ha encontrado el componente ConnectMongoDB en la escena.");
+        }
     }
 
     private void Start()
@@ -98,7 +103,8 @@ public class GameManager : MonoBehaviour
         frogger.gameObject.SetActive(false);
         gameOverMenu.SetActive(true);
 
-        // SaveGameToJSON();
+        // Guardar los datos y enviarlos a MongoDB
+        SaveGameToJSONAndSendToMongoDB();
 
         StopAllCoroutines();
         StartCoroutine(CheckForPlayAgain());
@@ -181,41 +187,34 @@ public class GameManager : MonoBehaviour
             coinsText.text = coins.ToString();
     }
 
-    /* public void SaveGameToJSON()
+    // Guardar los datos y enviarlos a MongoDB
+    public void SaveGameToJSONAndSendToMongoDB()
     {
-        PlayerData data = new PlayerData();
-        data.coins = this.coins;
-        data.score = this.score;
-
-        ImageChanger scriptImagen = FindObjectOfType<ImageChanger>();
-
-        if (scriptImagen != null)
+        // Crear el objeto PlayerData
+        PlayerData data = new PlayerData
         {
-            data.currentSkin = scriptImagen.currentIndex;
+            coins = this.coins,
+            score = this.score,
+            currentSkin = FindObjectOfType<ImageChanger>()?.currentIndex ?? 0,
+            lastSave = System.DateTime.Now.ToString()
+        };
+
+        // Convertir los datos a formato JSON
+        string json = JsonUtility.ToJson(data, true);
+
+        // Guardar el JSON en un archivo
+        string path = Path.Combine(Application.persistentDataPath, "player_save.json");
+        File.WriteAllText(path, json);
+        Debug.Log("¡Archivo JSON creado en: " + path);
+
+        // Enviar los datos a MongoDB
+        if (mongoDbConnector != null)
+        {
+            mongoDbConnector.EnviarDatosAMongoDB(data); // Enviar directamente el objeto playerData
         }
         else
         {
-            data.currentSkin = 0;
-            Debug.LogWarning("No se encontró ImageChanger en la escena. Se guardó skin 0 por defecto.");
-        }
-
-        data.lastSave = System.DateTime.Now.ToString();
-
-        string json = JsonUtility.ToJson(data, true);
-        string path = Path.Combine(Application.persistentDataPath, "player_save.json");
-
-        File.WriteAllText(path, json);
-        Debug.Log("¡Éxito! Archivo JSON creado en: " + path);
-    }
-
-    */
-
-
-    private void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.S))
-        {
-            //SaveGameToJSON();
+            Debug.LogError("El componente ConnectMongoDB no está asignado correctamente.");
         }
     }
 }

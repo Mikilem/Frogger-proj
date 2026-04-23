@@ -455,6 +455,11 @@ MonoBehaviour:
   livesText: {fileID: 564978962}
   scoreText: {fileID: 457864535}
   coinsText: {fileID: 1812465849}
+  playerData:
+    coins: 0
+    score: 0
+    currentSkin: 0
+    lastSave: 
 --- !u!4 &144788944
 Transform:
   m_ObjectHideFlags: 0
