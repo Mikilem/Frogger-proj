@@ -19,7 +19,8 @@ public class Snake : MonoBehaviour
     private float separacionSegmentos = 0.5f;
 
     [Header("Ataque")]
-    [SerializeField] private float cooldownAtaque = 2f;  // Aumentado a 2 segundos
+    [SerializeField] 
+    private float cooldownAtaque = 2f;  // Aumentado a 2 segundos
 
     private Transform frogger;
     private Frogger scriptFrogger;
