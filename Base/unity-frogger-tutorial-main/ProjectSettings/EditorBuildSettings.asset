@@ -23,4 +23,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/MENUS/Scenes/5SettingsMenu.unity
     guid: 8cf631179a2ee904cbd7ec1f0442f477
+  - enabled: 1
+    path: Assets/SinRound/6Sin1.unity
+    guid: 4c034b3746e1d004285bc610e54b1465
   m_configObjects: {}
