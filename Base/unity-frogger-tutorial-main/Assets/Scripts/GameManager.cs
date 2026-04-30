@@ -18,6 +18,8 @@ public class GameManager : MonoBehaviour
     [SerializeField] private Text scoreText;
     [SerializeField] private Text coinsText;
 
+    [SerializeField] private LeaderboardManager leaderboard; // Añade esta línea
+
     public int lives { get; private set; } = 3;
     public int score { get; private set; } = 0;
     public int time { get; private set; } = 30;
@@ -103,8 +105,14 @@ public class GameManager : MonoBehaviour
         frogger.gameObject.SetActive(false);
         gameOverMenu.SetActive(true);
 
-        // Guardar los datos y enviarlos a MongoDB
         SaveGameToJSONAndSendToMongoDB();
+
+        // Busca el script y llama a la función corregida
+        LeaderboardManager tabla = FindObjectOfType<LeaderboardManager>();
+        if (tabla != null)
+        {
+            tabla.ActualizarYMostrarTabla();
+        }
 
         StopAllCoroutines();
         StartCoroutine(CheckForPlayAgain());
