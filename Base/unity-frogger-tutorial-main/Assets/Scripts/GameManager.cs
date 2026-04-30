@@ -105,17 +105,38 @@ public class GameManager : MonoBehaviour
         frogger.gameObject.SetActive(false);
         gameOverMenu.SetActive(true);
 
-        SaveGameToJSONAndSendToMongoDB();
+        // En lugar de llamar a la función de guardado normal, usamos la nueva secuencia
+        StartCoroutine(GuardarYActualizarTabla());
 
-        // Busca el script y llama a la función corregida
+        StopAllCoroutines();
+        StartCoroutine(CheckForPlayAgain());
+    }
+
+    private IEnumerator GuardarYActualizarTabla()
+    {
+        // 1. Preparar los datos
+        PlayerData data = new PlayerData
+        {
+            coins = this.coins,
+            score = this.score,
+            currentSkin = FindObjectOfType<ImageChanger>()?.currentIndex ?? 0,
+            lastSave = System.DateTime.Now.ToString("HH:mm dd/MM")
+        };
+
+        // 2. Enviar a MongoDB y ESPERAR a que la tarea termine
+        if (mongoDbConnector != null)
+        {
+            var task = mongoDbConnector.EnviarDatosAMongoDB(data);
+            // Esta línea hace que Unity espere hasta que el servidor de MongoDB responda "OK"
+            yield return new WaitUntil(() => task.IsCompleted);
+        }
+
+        // 3. Ahora que el dato está en la base de datos, pedimos la tabla
         LeaderboardManager tabla = FindObjectOfType<LeaderboardManager>();
         if (tabla != null)
         {
             tabla.ActualizarYMostrarTabla();
         }
-
-        StopAllCoroutines();
-        StartCoroutine(CheckForPlayAgain());
     }
 
     private IEnumerator CheckForPlayAgain()

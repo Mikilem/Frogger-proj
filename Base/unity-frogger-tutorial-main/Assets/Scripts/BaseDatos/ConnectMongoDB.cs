@@ -26,17 +26,23 @@ public class ConnectMongoDB : MonoBehaviour
         }
     }
 
-    public async void EnviarDatosAMongoDB(PlayerData playerData)
+    // Cambiamos a Task para poder esperar a que termine de guardar antes de leer la tabla
+    // Cambia la definición de EnviarDatosAMongoDB para que devuelva Task
+    public async Task EnviarDatosAMongoDB(PlayerData playerData)
     {
-        BsonDocument document = new BsonDocument {
-            { "coins", playerData.coins },
-            { "score", playerData.score },
-            { "currentSkin", playerData.currentSkin },
-            { "lastSave", playerData.lastSave }
-        };
+        BsonDocument document = new BsonDocument
+    {
+        { "coins", playerData.coins },
+        { "score", playerData.score },
+        { "currentSkin", playerData.currentSkin },
+        { "lastSave", playerData.lastSave }
+    };
+
         try
         {
+            // Usamos la versión Async y esperamos (await)
             await playersCollection.InsertOneAsync(document);
+            Debug.Log("¡Datos guardados en la nube con éxito!");
         }
         catch (System.Exception e)
         {
@@ -44,7 +50,7 @@ public class ConnectMongoDB : MonoBehaviour
         }
     }
 
-    // Esta es la función que le falta a tu script para corregir el primer error
+    // Asegúrate de que esta función tenga el Limit(10)
     public async Task<string> ObtenerTop10Arcade()
     {
         string ranking = "      LOS 10 MEJORES\n";
@@ -52,6 +58,7 @@ public class ConnectMongoDB : MonoBehaviour
         try
         {
             var sort = Builders<BsonDocument>.Sort.Descending("score");
+            // Forzamos el límite a 10 explícitamente
             var lista = await playersCollection.Find(new BsonDocument()).Sort(sort).Limit(10).ToListAsync();
 
             int pos = 1;
@@ -64,14 +71,8 @@ public class ConnectMongoDB : MonoBehaviour
         }
         catch
         {
-            ranking = "ERROR DE CONEXION";
+            ranking = "ERROR DE CONEXIÓN";
         }
         return ranking;
-    }
-
-    // Mantén esta por si acaso la usas en otro lado
-    public async Task<string> ObtenerTextoLeaderboard()
-    {
-        return await ObtenerTop10Arcade();
     }
 }
