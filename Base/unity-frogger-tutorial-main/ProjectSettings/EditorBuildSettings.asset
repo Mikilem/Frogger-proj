@@ -26,4 +26,10 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/SinRound/6Sin1.unity
     guid: 4c034b3746e1d004285bc610e54b1465
+  - enabled: 1
+    path: Assets/SinRound/7Sin2.unity
+    guid: d5451d04b5fbcab409ac05557277252b
+  - enabled: 1
+    path: Assets/SinRound/8Sin3.unity
+    guid: 5c1da2e009114494e8ad690ae0079736
   m_configObjects: {}
