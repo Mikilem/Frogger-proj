@@ -1,6 +1,6 @@
 ﻿using System.Collections;
 using UnityEngine;
-
+using UnityEngine.SceneManagement; // win 
 [RequireComponent(typeof(SpriteRenderer))]
 public class Frogger : MonoBehaviour
 {
@@ -12,6 +12,8 @@ public class Frogger : MonoBehaviour
     private Vector3 spawnPosition;
     private float farthestRow;
     private bool cooldown;
+        private bool hasWon = false;
+    public bool victoryEnabled = true;
 
     private void Awake()
     {
@@ -21,6 +23,8 @@ public class Frogger : MonoBehaviour
 
     private void Update()
     {
+        if (hasWon) return;
+
         if (Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.UpArrow))
         {
             transform.rotation = Quaternion.Euler(0f, 0f, 0f);
@@ -49,40 +53,40 @@ public class Frogger : MonoBehaviour
 
         Vector3 destination = transform.position + direction;
 
-        // Check for collision at the destination
+        // Comprobar si hay colisión en el destino
         Collider2D platform = Physics2D.OverlapBox(destination, Vector2.zero, 0f, LayerMask.GetMask("Platform"));
         Collider2D obstacle = Physics2D.OverlapBox(destination, Vector2.zero, 0f, LayerMask.GetMask("Obstacle"));
         Collider2D barrier = Physics2D.OverlapBox(destination, Vector2.zero, 0f, LayerMask.GetMask("Barrier"));
 
-        // Prevent any movement if there is a barrier
+        // Impide cualquier movimiento si hay una barrera.
         if (barrier != null) {
             return;
         }
 
-        // Attach/detach frogger from the platform
+        // Conectar/desconectar Frogger de la plataforma
         if (platform != null) {
             transform.SetParent(platform.transform);
         } else {
             transform.SetParent(null);
         }
 
-        // Frogger dies when it hits an obstacle
+        // Frogger muere cuando choca contra un obstáculo.
         if (obstacle != null && platform == null)
         {
             transform.position = destination;
             Death();
         }
-        // Conditions pass, move to the destination
+        // Las condiciones se cumplen, pasar al destino
         else
         {
-            // Check if we have advanced to a farther row
+            // Comprobar si hemos avanzado a una fila más lejana
             if (destination.y > farthestRow)
             {
                 farthestRow = destination.y;
                 GameManager.Instance.AdvancedRow();
             }
 
-            // Start leap animation
+            // Iniciar animación de salto
             StopAllCoroutines();
             StartCoroutine(Leap(destination));
         }
@@ -95,20 +99,20 @@ public class Frogger : MonoBehaviour
         float elapsed = 0f;
         float duration = 0.125f;
 
-        // Set initial state
+        // Establecer estado inicial
         spriteRenderer.sprite = leapSprite;
         cooldown = true;
 
         while (elapsed < duration)
         {
-            // Move towards the destination over time
+            // Avanzar hacia el destino con el tiempo
             float t = elapsed / duration;
             transform.position = Vector3.Lerp(startPosition, destination, t);
             elapsed += Time.deltaTime;
             yield return null;
         }
 
-        // Set final state
+        // Establecer estado final
         transform.position = destination;
         spriteRenderer.sprite = idleSprite;
         cooldown = false;
@@ -116,17 +120,17 @@ public class Frogger : MonoBehaviour
 
     public void Respawn()
     {
-        // Stop animations
+        // Detener animaciones
         StopAllCoroutines();
 
-        // Reset transform to spawn
+        // Reiniciar la transformación para generar
         transform.SetPositionAndRotation(spawnPosition, Quaternion.identity);
         farthestRow = spawnPosition.y;
 
-        // Reset sprite
+        //Restablecer sprite
         spriteRenderer.sprite = idleSprite;
 
-        // Enable control
+        //Habilitar control
         gameObject.SetActive(true);
         enabled = true;
         cooldown = false;
@@ -134,28 +138,54 @@ public class Frogger : MonoBehaviour
 
     public void Death()
     {
-        // Stop animations
+        // Detener animaciones
         StopAllCoroutines();
 
-        // Disable control
+        // Deshabilitar el control
         enabled = false;
 
-        // Display death sprite
+        // Mostrar sprite de muerte
         transform.rotation = Quaternion.identity;
         spriteRenderer.sprite = deadSprite;
 
-        // Update game state
+        //Actualiza el estado del juego
         GameManager.Instance.Died();
     }
 
     private void OnTriggerEnter2D(Collider2D other)
     {
+        // Solo detecta Home si victoryEnabled está ACTIVADO
+        if (victoryEnabled && other.gameObject.name == "Home" && !hasWon)
+        {
+            hasWon = true;
+            Win();
+            return;
+        }
+
+        // Lógica original de muerte
         bool hitObstacle = other.gameObject.layer == LayerMask.NameToLayer("Obstacle");
         bool onPlatform = transform.parent != null;
 
-        if (enabled && hitObstacle && !onPlatform) {
+        if (enabled && hitObstacle && !onPlatform)
+        {
             Death();
         }
     }
 
+    private void Win()
+    {
+        StopAllCoroutines();
+        enabled = false;
+
+        // Frogger desaparece
+        spriteRenderer.enabled = false;
+
+        // Opcional: desactivar collider
+        Collider2D col = GetComponent<Collider2D>();
+        if (col != null) col.enabled = false;
+
+        Debug.Log("¡FROGGER GANÓ!");
+
+       
+    }
 }
