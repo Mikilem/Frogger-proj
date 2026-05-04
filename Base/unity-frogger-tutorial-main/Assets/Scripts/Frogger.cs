@@ -15,6 +15,35 @@ public class Frogger : MonoBehaviour
     private float farthestRow;
     private bool cooldown;
 
+
+
+    // Necesitas una referencia a las mismas skins que la tienda
+    public Sprite[] spritesDeSkins;
+
+    void Start()
+    {
+        // 1. Obtenemos el ID guardado
+        int id = PlayerPrefs.GetInt("SkinEquipada", 0);
+
+        // 2. VALIDACIÓN: Comprobamos si la lista existe y si el ID es válido
+        if (spritesDeSkins != null && spritesDeSkins.Length > 0)
+        {
+            // Si el ID es mayor de lo que tenemos, volvemos a la skin 0
+            if (id >= spritesDeSkins.Length)
+            {
+                id = 0;
+                PlayerPrefs.SetInt("SkinEquipada", 0);
+            }
+
+            GetComponent<SpriteRenderer>().sprite = spritesDeSkins[id];
+        }
+        else
+        {
+            Debug.LogError("¡OJO! No has arrastrado ningún sprite a la lista 'spritesDeSkins' en el Inspector del Frogger.");
+        }
+    }
+
+
     private void Awake()
     {
         spriteRenderer = GetComponent<SpriteRenderer>();
@@ -44,6 +73,7 @@ public class Frogger : MonoBehaviour
             Move(Vector3.down);
         }
     }
+
 
     private void Move(Vector3 direction)
     {

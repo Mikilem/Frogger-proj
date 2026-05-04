@@ -1,38 +1,83 @@
 using UnityEngine;
-using UnityEngine.UI;  // Necesario para trabajar con UI
+using UnityEngine.UI;
 
 public class ShopManager : MonoBehaviour
 {
-    public int coins = 100;           // Monedas del jugador
-    public Text coinsText;            // Referencia al UI de texto que muestra las monedas
-    public Button buyButton;          // El botón de compra
-    public int itemPrice = 10;        // Precio del ítem que el jugador comprará
+    [System.Serializable]
+    public class SkinItem
+    {
+        public string nombre;
+        public Sprite spriteVisual;
+        public int precio;
+        public bool esComprada; // Para saber si ya la tiene
+    }
+
+    public SkinItem[] listaDeSkins; // Llénalo en el Inspector
+    public Image displayImage;      // El componente Image de la tienda
+    public Text precioText;         // Texto para el precio
+    public Text nombreText;         // Texto para el nombre
+    public Button buyButton;
+    public Text coinsText;
+
+    private int currentIndex = 0;
 
     void Start()
     {
-        // Asegúrate de que el botón esté configurado
-        buyButton.onClick.AddListener(BuyItem);  // Al hacer clic en el botón, se ejecutará la función BuyItem()
-        UpdateUI();  // Actualiza el UI al comenzar
+        // Cargar cuál skin tenía puesta la última vez
+        currentIndex = PlayerPrefs.GetInt("SkinEquipada", 0);
+        UpdateUI();
+
+        buyButton.onClick.AddListener(ConfirmarSeleccion);
     }
 
-    public void BuyItem()
+    public void NextSkin()
     {
-        // Verifica si el jugador tiene suficiente dinero para comprar el ítem
-        if (coins >= itemPrice)
-        {
-            coins -= itemPrice;  // Resta el precio del ítem de las monedas del jugador
-            UpdateUI();           // Actualiza el UI para reflejar las monedas restantes
-            Debug.Log("¡Compra exitosa!"); // Mensaje de depuración, puedes agregar más lógica aquí para la compra
-        }
-        else
-        {
-            Debug.Log("No tienes suficientes monedas para comprar este ítem.");
-        }
+        currentIndex = (currentIndex + 1) % listaDeSkins.Length;
+        UpdateUI();
+    }
+
+    public void PrevSkin()
+    {
+        currentIndex--;
+        if (currentIndex < 0) currentIndex = listaDeSkins.Length - 1;
+        UpdateUI();
     }
 
     void UpdateUI()
     {
-        // Actualiza el texto de monedas en la UI
-        coinsText.text = "" + coins;
+        SkinItem skin = listaDeSkins[currentIndex];
+        displayImage.sprite = skin.spriteVisual;
+        nombreText.text = skin.nombre;
+
+        // Si el precio es 0, es la skin por defecto o ya comprada
+        precioText.text = skin.precio <= 0 ? "EQUIPAR" : "PRECIO: " + skin.precio;
+
+        if (GameManager.Instance != null)
+            coinsText.text = GameManager.Instance.coins.ToString();
+    }
+
+    public void ConfirmarSeleccion()
+    {
+        SkinItem skin = listaDeSkins[currentIndex];
+
+        // Lógica de compra
+        if (GameManager.Instance.coins >= skin.precio)
+        {
+            if (skin.precio > 0)
+            {
+                GameManager.Instance.AddCoins(-skin.precio);
+                skin.precio = 0; // Marcamos como comprada esta sesión
+            }
+
+            // GUARDAR SELECCIÓN
+            PlayerPrefs.SetInt("SkinEquipada", currentIndex);
+            PlayerPrefs.Save();
+            UpdateUI();
+            Debug.Log("Skin " + skin.nombre + " equipada!");
+        }
+        else
+        {
+            Debug.Log("No tienes dinero suficiente");
+        }
     }
 }

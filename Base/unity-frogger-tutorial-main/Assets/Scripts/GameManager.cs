@@ -29,20 +29,31 @@ public class GameManager : MonoBehaviour
 
     private void Awake()
     {
-        if (Instance != null)
+        // 1. Patrón Singleton Robusto
+        if (Instance != null && Instance != this)
         {
             Destroy(gameObject);
             return;
         }
 
         Instance = this;
+
+        // Opcional: Si quieres que el GameManager no se destruya al cambiar de escena (ej: ir del Menú al Juego)
+        // transform.SetParent(null); // Asegura que sea objeto raíz
+        // DontDestroyOnLoad(gameObject);
+
+        // 2. Carga de datos segura
         coins = PlayerPrefs.GetInt("Coins", 0);
 
-        // Obtener el componente ConnectMongoDB
-        mongoDbConnector = FindObjectOfType<ConnectMongoDB>();
+        // 3. Búsqueda optimizada de componentes
         if (mongoDbConnector == null)
         {
-            Debug.LogError("No se ha encontrado el componente ConnectMongoDB en la escena.");
+            mongoDbConnector = FindObjectOfType<ConnectMongoDB>();
+
+            if (mongoDbConnector == null)
+            {
+                Debug.LogWarning("ConnectMongoDB no está en la escena. El guardado online estará desactivado.");
+            }
         }
     }
 
@@ -105,12 +116,24 @@ public class GameManager : MonoBehaviour
         frogger.gameObject.SetActive(false);
         gameOverMenu.SetActive(true);
 
+
+        SaveGameToJSONAndSendToMongoDB();
         // En lugar de llamar a la función de guardado normal, usamos la nueva secuencia
         StartCoroutine(GuardarYActualizarTabla());
 
         StopAllCoroutines();
         StartCoroutine(CheckForPlayAgain());
-    }
+
+        LeaderboardManager tabla = FindObjectOfType<LeaderboardManager>();
+        if (tabla != null)
+        {
+            tabla.MostrarRanking();
+        }
+
+        StopAllCoroutines();
+        StartCoroutine(CheckForPlayAgain());
+    
+}
 
     private IEnumerator GuardarYActualizarTabla()
     {
@@ -217,7 +240,7 @@ public class GameManager : MonoBehaviour
     }
 
     // Guardar los datos y enviarlos a MongoDB
-    public void SaveGameToJSONAndSendToMongoDB()
+    public async void SaveGameToJSONAndSendToMongoDB()
     {
         // Crear el objeto PlayerData
         PlayerData data = new PlayerData
@@ -239,7 +262,7 @@ public class GameManager : MonoBehaviour
         // Enviar los datos a MongoDB
         if (mongoDbConnector != null)
         {
-            mongoDbConnector.EnviarDatosAMongoDB(data); // Enviar directamente el objeto playerData
+            await mongoDbConnector.EnviarDatosAMongoDB(data); // Enviar directamente el objeto playerData
         }
         else
         {
