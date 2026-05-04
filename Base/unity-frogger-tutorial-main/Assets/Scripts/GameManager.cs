@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 [DefaultExecutionOrder(-1)]
@@ -164,5 +165,6 @@ public class GameManager : MonoBehaviour
         this.lives = lives;
         livesText.text = lives.ToString();
     }
+
 
 }

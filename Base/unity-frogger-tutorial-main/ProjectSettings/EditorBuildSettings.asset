@@ -6,7 +6,6 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-<<<<<<< HEAD
     path: Assets/MENUS/Scenes/0Main menu.unity
     guid: 8a35e8c3e36fda84db576204b6954c39
   - enabled: 1
@@ -33,11 +32,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/SinRound/8Sin3.unity
     guid: 5c1da2e009114494e8ad690ae0079736
-=======
-    path: Assets/Scenes/Frogger.unity
-    guid: 2cda990e2423bbf4892e6590ba056729
   - enabled: 1
-    path: Assets/Scenes/Frogger_4hard.unity
-    guid: 8587c5ae7269029448ace298d8a3af1e
->>>>>>> Serpiente
+    path: Assets/Levels/9HARD1.unity
+    guid: ab2a168a3b71424468e969151fac75d1
   m_configObjects: {}
