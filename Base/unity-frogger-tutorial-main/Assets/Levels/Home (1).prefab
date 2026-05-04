@@ -11,9 +11,9 @@ GameObject:
   - component: {fileID: 327423771268191956}
   - component: {fileID: 5045131065475563332}
   - component: {fileID: 1680487470125591931}
-  - component: {fileID: 842653511310112138}
+  - component: {fileID: 6900214408534034223}
   m_Layer: 8
-  m_Name: Home
+  m_Name: Home (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -28,8 +28,8 @@ Transform:
   m_GameObject: {fileID: 825449176114315911}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -5, y: 0.25, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalPosition: {x: 0.2, y: 0.6565, z: 0}
+  m_LocalScale: {x: 3.3033438, y: 1.5419, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 2198853913781051395}
@@ -132,7 +132,7 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 1, y: 1}
   m_EdgeRadius: 0
---- !u!114 &842653511310112138
+--- !u!114 &6900214408534034223
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -141,7 +141,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 825449176114315911}
   m_Enabled: 0
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0c073d7be6246d849bca8b648dff02d7, type: 3}
+  m_Script: {fileID: 11500000, guid: 60605b498164c964789bc2c466161c3a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   frog: {fileID: 8024054854967323781}
