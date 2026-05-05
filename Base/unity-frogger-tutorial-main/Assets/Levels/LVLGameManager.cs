@@ -11,6 +11,7 @@ public class LVLGameManager : MonoBehaviour
     [SerializeField] private LVLHome[] homes;
     [SerializeField] private LVLFrogger frogger;
     [SerializeField] private GameObject gameOverMenu;
+    [SerializeField] private GameObject gameWonMenu;
     [SerializeField] private Text timeText;
     [SerializeField] private Text livesText;
     [SerializeField] private Text scoreText;
@@ -43,6 +44,7 @@ public class LVLGameManager : MonoBehaviour
     private void NewGame()
     {
         gameOverMenu.SetActive(false);
+        gameWonMenu.SetActive(false);
 
         SetScore(0);
         SetLives(3);
@@ -135,12 +137,20 @@ public class LVLGameManager : MonoBehaviour
         {
             SetLives(lives + 1);
             SetScore(score + 1000);
-            Invoke(nameof(NewLevel), 1f);
+            Invoke(nameof(GameWon), 1f);
         }
         else
         {
             Invoke(nameof(Respawn), 1f);
         }
+    }
+    private void GameWon()
+    {
+        frogger.gameObject.SetActive(false);
+        gameWonMenu.SetActive(true);
+
+        StopAllCoroutines();
+        StartCoroutine(CheckForPlayAgain());
     }
 
     private bool Cleared()
