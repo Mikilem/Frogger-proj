@@ -365,7 +365,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 144788944}
-  - component: {fileID: 144788943}
   - component: {fileID: 144788945}
   m_Layer: 0
   m_Name: Game Manager
@@ -374,29 +373,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &144788943
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 144788942}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 781ae0c3a0b307247992aded40e5228d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  homes:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  frogger: {fileID: 0}
-  gameOverMenu: {fileID: 65698599}
-  timeText: {fileID: 1002610743}
-  livesText: {fileID: 564978962}
-  scoreText: {fileID: 457864535}
 --- !u!4 &144788944
 Transform:
   m_ObjectHideFlags: 0
@@ -425,8 +401,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   homes:
-  - {fileID: 0}
-  frogger: {fileID: 0}
+  - {fileID: 2263803765081767540}
+  frogger: {fileID: 4262394122415413150}
   gameOverMenu: {fileID: 65698599}
   timeText: {fileID: 1002610743}
   livesText: {fileID: 564978962}
@@ -1124,7 +1100,7 @@ GameObject:
   - component: {fileID: 313419803}
   - component: {fileID: 313419802}
   - component: {fileID: 313419801}
-  - component: {fileID: 313419800}
+  - component: {fileID: 313419805}
   m_Layer: 0
   m_Name: SnakeEnemy (1)
   m_TagString: Untagged
@@ -1132,24 +1108,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &313419800
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 313419799}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d68b65e0e1c017b439fed88883a9d2d2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  velocidadMovimiento: 1.5
-  rangoDeteccion: 55
-  prefabSegmentoCuerpo: {fileID: 0}
-  segmentosIniciales: 3
-  separacionSegmentos: 0.5
-  cooldownAtaque: 2
 --- !u!61 &313419801
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -1260,9 +1218,9 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingLayerID: -1429949701
+  m_SortingLayer: 1
+  m_SortingOrder: 1
   m_Sprite: {fileID: 21300000, guid: 4902345c307b2c8498e62c62a7c5fffa, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -1289,6 +1247,24 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &313419805
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 313419799}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d215ac6201e295b4ca72e3c74e5e4aae, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  velocidadMovimiento: 1.5
+  rangoDeteccion: 55
+  prefabSegmentoCuerpo: {fileID: 0}
+  segmentosIniciales: 3
+  separacionSegmentos: 0.5
+  cooldownAtaque: 2
 --- !u!1001 &313479932
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -3140,7 +3116,7 @@ GameObject:
   - component: {fileID: 1033873885}
   - component: {fileID: 1033873884}
   - component: {fileID: 1033873883}
-  - component: {fileID: 1033873882}
+  - component: {fileID: 1033873887}
   m_Layer: 0
   m_Name: SnakeEnemy
   m_TagString: Untagged
@@ -3148,24 +3124,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &1033873882
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1033873881}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d68b65e0e1c017b439fed88883a9d2d2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  velocidadMovimiento: 1.5
-  rangoDeteccion: 55
-  prefabSegmentoCuerpo: {fileID: 0}
-  segmentosIniciales: 3
-  separacionSegmentos: 0.5
-  cooldownAtaque: 2
 --- !u!61 &1033873883
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -3276,9 +3234,9 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingLayerID: -1429949701
+  m_SortingLayer: 1
+  m_SortingOrder: 1
   m_Sprite: {fileID: 21300000, guid: 4902345c307b2c8498e62c62a7c5fffa, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -3305,6 +3263,24 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1033873887
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1033873881}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d215ac6201e295b4ca72e3c74e5e4aae, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  velocidadMovimiento: 1.5
+  rangoDeteccion: 55
+  prefabSegmentoCuerpo: {fileID: 0}
+  segmentosIniciales: 3
+  separacionSegmentos: 0.5
+  cooldownAtaque: 2
 --- !u!1 &1080039378
 GameObject:
   m_ObjectHideFlags: 0
@@ -5999,6 +5975,18 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 2263803765081767538}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &2263803765081767540 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 6900214408534034223, guid: 03f5b6b7373b26843921c13033e5262d,
+    type: 3}
+  m_PrefabInstance: {fileID: 2263803765081767538}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 60605b498164c964789bc2c466161c3a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &3691121814320678166
 PrefabInstance:
   m_ObjectHideFlags: 0
