@@ -20,6 +20,7 @@ public class LeaderboardManager : MonoBehaviour
     // Añadimos esta como "alias" para que no falle si usas otro nombre
     public void MostrarRanking()
     {
+      
         ActualizarYMostrarTabla();
     }
 }

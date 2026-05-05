@@ -1,45 +1,43 @@
 ﻿using System.Collections;
 using UnityEngine;
+using static ShopManager;
 
 [RequireComponent(typeof(SpriteRenderer))]
 public class Frogger : MonoBehaviour
 {
+    // Las variables de estado actuales se mantienen
     public Sprite idleSprite;
     public Sprite leapSprite;
-    public Sprite deadSprite;       
+    public Sprite deadSprite;
 
     private SpriteRenderer spriteRenderer;
-
-
     private Vector3 spawnPosition;
     private float farthestRow;
     private bool cooldown;
 
-
-
-    // Necesitas una referencia a las mismas skins que la tienda
-    public Sprite[] spritesDeSkins;
+    // --- NUEVO SISTEMA DE ESTADOS ---
+    [Header("Configuración de Skins")]
+    public SkinData[] todasLasSkins; // Llena esto en el Inspector con tus 3 estados por skin
 
     void Start()
     {
-        // 1. Obtenemos el ID guardado
+        // 1. Obtener ID guardado
         int id = PlayerPrefs.GetInt("SkinEquipada", 0);
 
-        // 2. VALIDACIÓN: Comprobamos si la lista existe y si el ID es válido
-        if (spritesDeSkins != null && spritesDeSkins.Length > 0)
+        // 2. Cargar los estados de la skin seleccionada
+        if (todasLasSkins != null && todasLasSkins.Length > id)
         {
-            // Si el ID es mayor de lo que tenemos, volvemos a la skin 0
-            if (id >= spritesDeSkins.Length)
-            {
-                id = 0;
-                PlayerPrefs.SetInt("SkinEquipada", 0);
-            }
+            // Asignamos los sprites de la skin elegida a las variables de estado del sapo
+            idleSprite = todasLasSkins[id].idle;
+            leapSprite = todasLasSkins[id].leap;
+            deadSprite = todasLasSkins[id].dead;
 
-            GetComponent<SpriteRenderer>().sprite = spritesDeSkins[id];
+            // Aplicamos la imagen inicial
+            spriteRenderer.sprite = idleSprite;
         }
         else
         {
-            Debug.LogError("¡OJO! No has arrastrado ningún sprite a la lista 'spritesDeSkins' en el Inspector del Frogger.");
+            Debug.LogError("El ID de skin no existe en el array todasLasSkins.");
         }
     }
 

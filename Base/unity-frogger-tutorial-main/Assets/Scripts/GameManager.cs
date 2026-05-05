@@ -118,10 +118,14 @@ public class GameManager : MonoBehaviour
 
 
         SaveGameToJSONAndSendToMongoDB();
-        // En lugar de llamar a la función de guardado normal, usamos la nueva secuencia
-        StartCoroutine(GuardarYActualizarTabla());
+
+        
+
+        // StartCoroutine(GuardarYActualizarTabla());
+
 
         StopAllCoroutines();
+
         StartCoroutine(CheckForPlayAgain());
 
         LeaderboardManager tabla = FindObjectOfType<LeaderboardManager>();
@@ -130,7 +134,10 @@ public class GameManager : MonoBehaviour
             tabla.MostrarRanking();
         }
 
-        StopAllCoroutines();
+        // En lugar de llamar a la función de guardado normal, usamos la nueva secuencia
+        StartCoroutine(GuardarYActualizarTabla());
+
+        
         StartCoroutine(CheckForPlayAgain());
     
 }
@@ -152,13 +159,15 @@ public class GameManager : MonoBehaviour
             var task = mongoDbConnector.EnviarDatosAMongoDB(data);
             // Esta línea hace que Unity espere hasta que el servidor de MongoDB responda "OK"
             yield return new WaitUntil(() => task.IsCompleted);
+
+            
         }
 
         // 3. Ahora que el dato está en la base de datos, pedimos la tabla
         LeaderboardManager tabla = FindObjectOfType<LeaderboardManager>();
         if (tabla != null)
         {
-            tabla.ActualizarYMostrarTabla();
+            tabla.MostrarRanking();
         }
     }
 
@@ -240,7 +249,7 @@ public class GameManager : MonoBehaviour
     }
 
     // Guardar los datos y enviarlos a MongoDB
-    public async void SaveGameToJSONAndSendToMongoDB()
+    public void SaveGameToJSONAndSendToMongoDB()
     {
         // Crear el objeto PlayerData
         PlayerData data = new PlayerData
@@ -260,13 +269,13 @@ public class GameManager : MonoBehaviour
         Debug.Log("¡Archivo JSON creado en: " + path);
 
         // Enviar los datos a MongoDB
-        if (mongoDbConnector != null)
-        {
-            await mongoDbConnector.EnviarDatosAMongoDB(data); // Enviar directamente el objeto playerData
-        }
-        else
-        {
-            Debug.LogError("El componente ConnectMongoDB no está asignado correctamente.");
-        }
+        //if (mongoDbConnector != null)
+        //{
+            //await mongoDbConnector.EnviarDatosAMongoDB(data); // Enviar directamente el objeto playerData
+       // }
+        //else
+        //{
+            // Debug.LogError("El componente ConnectMongoDB no está asignado correctamente.");
+       // }
     }
 }

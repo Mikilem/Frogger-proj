@@ -21,6 +21,15 @@ public class ShopManager : MonoBehaviour
 
     private int currentIndex = 0;
 
+    [System.Serializable]
+    public class SkinData
+    {
+        public string nombre;
+        public int precio;
+        public Sprite idle;
+        public Sprite leap;
+        public Sprite dead;
+    }
     void Start()
     {
         // Cargar cuál skin tenía puesta la última vez
