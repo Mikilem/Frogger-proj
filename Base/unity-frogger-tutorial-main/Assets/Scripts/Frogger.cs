@@ -1,11 +1,7 @@
 ﻿using System.Collections;
 using UnityEngine;
-<<<<<<< HEAD:Base/unity-frogger-tutorial-main/Assets/Scripts/Frogger.cs
 using UnityEngine.SceneManagement; // win 
-=======
 using static ShopManager;
-
->>>>>>> origin/Monedas:Base/unity-frogger-tutorial-main/Assets/Scripts/AFrogger.cs
 [RequireComponent(typeof(SpriteRenderer))]
 public class Frogger : MonoBehaviour
 {

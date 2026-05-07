@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using UnityEditor;
+using UnityEngine;
 
 public class MoveCycle : MonoBehaviour
 {
@@ -43,6 +44,8 @@ public class MoveCycle : MonoBehaviour
         else {
             transform.Translate(speed * Time.deltaTime * direction);
         }
+
+        
     }
 
 }
