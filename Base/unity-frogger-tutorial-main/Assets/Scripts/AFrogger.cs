@@ -1,9 +1,15 @@
 ﻿using System.Collections;
 using UnityEngine;
+<<<<<<< HEAD:Base/unity-frogger-tutorial-main/Assets/Scripts/Frogger.cs
 using UnityEngine.SceneManagement; // win 
+=======
+using static ShopManager;
+
+>>>>>>> origin/Monedas:Base/unity-frogger-tutorial-main/Assets/Scripts/AFrogger.cs
 [RequireComponent(typeof(SpriteRenderer))]
 public class Frogger : MonoBehaviour
 {
+    // Las variables de estado actuales se mantienen
     public Sprite idleSprite;
     public Sprite leapSprite;
     public Sprite deadSprite;
@@ -14,6 +20,33 @@ public class Frogger : MonoBehaviour
     private bool cooldown;
         private bool hasWon = false;
     public bool victoryEnabled = true;
+
+    // --- NUEVO SISTEMA DE ESTADOS ---
+    [Header("Configuración de Skins")]
+    public SkinData[] todasLasSkins; // Llena esto en el Inspector con tus 3 estados por skin
+
+    void Start()
+    {
+        // 1. Obtener ID guardado
+        int id = PlayerPrefs.GetInt("SkinEquipada", 0);
+
+        // 2. Cargar los estados de la skin seleccionada
+        if (todasLasSkins != null && todasLasSkins.Length > id)
+        {
+            // Asignamos los sprites de la skin elegida a las variables de estado del sapo
+            idleSprite = todasLasSkins[id].idle;
+            leapSprite = todasLasSkins[id].leap;
+            deadSprite = todasLasSkins[id].dead;
+
+            // Aplicamos la imagen inicial
+            spriteRenderer.sprite = idleSprite;
+        }
+        else
+        {
+            Debug.LogError("El ID de skin no existe en el array todasLasSkins.");
+        }
+    }
+
 
     private void Awake()
     {
@@ -46,6 +79,7 @@ public class Frogger : MonoBehaviour
             Move(Vector3.down);
         }
     }
+
 
     private void Move(Vector3 direction)
     {
