@@ -32,6 +32,7 @@ public class ConnectMongoDB : MonoBehaviour
     {
         BsonDocument document = new BsonDocument
     {
+        { "name", playerData.playerName }, // <-- Guardamos el nombre
         { "coins", playerData.coins },
         { "score", playerData.score },
         { "currentSkin", playerData.currentSkin },
@@ -40,9 +41,8 @@ public class ConnectMongoDB : MonoBehaviour
 
         try
         {
-            // Usamos la versión Async y esperamos (await)
             await playersCollection.InsertOneAsync(document);
-            Debug.Log("¡Datos guardados en la nube con éxito!");
+            Debug.Log("¡Datos de " + playerData.playerName + " guardados!");
         }
         catch (System.Exception e)
         {
@@ -64,8 +64,17 @@ public class ConnectMongoDB : MonoBehaviour
             int pos = 1;
             foreach (var doc in lista)
             {
+                // 1. Intentamos sacar el nombre. Si no existe en la base de datos, ponemos "ANÓNIMO"
+                string nombreJugador = doc.Contains("name") ? doc["name"].AsString : "ANÓNIMO";
+
+                // 2. Sacamos la puntuación
                 int puntos = doc.Contains("score") ? doc["score"].AsInt32 : 0;
-                ranking += $"{pos:000}   GMR   {puntos:00000000}\n";
+
+                // 3. Formateamos la línea: 
+                // {pos:00} es el número de posición (01, 02...)
+                // {nombreJugador,-10} alinea el nombre a la izquierda con un espacio de 10 caracteres
+                ranking += $"{pos:00}   {nombreJugador,-10}   {puntos:000000}\n";
+
                 pos++;
             }
         }

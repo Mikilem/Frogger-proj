@@ -142,28 +142,34 @@ public class GameManager : MonoBehaviour
     
 }
 
+    [Header("UI Registro")]
+    [SerializeField] private InputField nameInputField; // Arrastra el InputField aquí
+    private string currentPlayerName = "Froggy";
+
+    // Modifica la lógica de guardado
     private IEnumerator GuardarYActualizarTabla()
     {
-        // 1. Preparar los datos
+        // Capturamos el nombre del InputField antes de guardar
+        if (nameInputField != null && !string.IsNullOrEmpty(nameInputField.text))
+        {
+            currentPlayerName = nameInputField.text;
+        }
+
         PlayerData data = new PlayerData
         {
+            playerName = this.currentPlayerName, // <-- Asignamos el nombre
             coins = this.coins,
             score = this.score,
             currentSkin = FindObjectOfType<ImageChanger>()?.currentIndex ?? 0,
             lastSave = System.DateTime.Now.ToString("HH:mm dd/MM")
         };
 
-        // 2. Enviar a MongoDB y ESPERAR a que la tarea termine
         if (mongoDbConnector != null)
         {
             var task = mongoDbConnector.EnviarDatosAMongoDB(data);
-            // Esta línea hace que Unity espere hasta que el servidor de MongoDB responda "OK"
             yield return new WaitUntil(() => task.IsCompleted);
-
-            
         }
 
-        // 3. Ahora que el dato está en la base de datos, pedimos la tabla
         LeaderboardManager tabla = FindObjectOfType<LeaderboardManager>();
         if (tabla != null)
         {
