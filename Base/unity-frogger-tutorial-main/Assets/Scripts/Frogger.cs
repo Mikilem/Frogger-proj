@@ -14,7 +14,7 @@ public class Frogger : MonoBehaviour
     private Vector3 spawnPosition;
     private float farthestRow;
     private bool cooldown;
-        private bool hasWon = false;
+    private bool hasWon = false;
     public bool victoryEnabled = true;
 
     // --- NUEVO SISTEMA DE ESTADOS ---
@@ -52,7 +52,7 @@ public class Frogger : MonoBehaviour
 
     private void Update()
     {
-        if (hasWon) return;
+        //if (hasWon) return;
 
         if (Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.UpArrow))
         {
@@ -184,13 +184,13 @@ public class Frogger : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        // Solo detecta Home si victoryEnabled está ACTIVADO
+        /* Solo detecta Home si victoryEnabled está ACTIVADO
         if (victoryEnabled && other.gameObject.name == "Home" && !hasWon)
         {
             hasWon = true;
             Win();
             return;
-        }
+        }*/
 
         // Lógica original de muerte
         bool hitObstacle = other.gameObject.layer == LayerMask.NameToLayer("Obstacle");
@@ -202,7 +202,7 @@ public class Frogger : MonoBehaviour
         }
     }
 
-    private void Win()
+    /*private void Win()
     {
         StopAllCoroutines();
         enabled = false;
@@ -217,5 +217,5 @@ public class Frogger : MonoBehaviour
         Debug.Log("¡FROGGER GANÓ!");
 
        
-    }
+    }*/
 }
