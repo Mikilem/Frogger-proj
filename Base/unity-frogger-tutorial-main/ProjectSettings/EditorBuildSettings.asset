@@ -59,4 +59,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/AFrogger.unity
     guid: 2cda990e2423bbf4892e6590ba056729
+  - enabled: 1
+    path: Assets/MENUS/Scenes/18Shop....unity
+    guid: 2463aeddf4a73e844928d77a9077ba02
   m_configObjects: {}
