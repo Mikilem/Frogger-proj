@@ -119,10 +119,6 @@ public class GameManager : MonoBehaviour
 
         SaveGameToJSONAndSendToMongoDB();
 
-        
-
-        // StartCoroutine(GuardarYActualizarTabla());
-
 
         StopAllCoroutines();
 
@@ -257,31 +253,23 @@ public class GameManager : MonoBehaviour
     // Guardar los datos y enviarlos a MongoDB
     public void SaveGameToJSONAndSendToMongoDB()
     {
-        // Crear el objeto PlayerData
+        // 1. Obtener el nombre del InputField
+        string nombreParaGuardar = "Jugador";
+        if (nameInputField != null && !string.IsNullOrEmpty(nameInputField.text))
+        {
+            nombreParaGuardar = nameInputField.text;
+        }
+
+        // 2. Crear el objeto con el nombre
         PlayerData data = new PlayerData
         {
+            playerName = nombreParaGuardar, // Ahora sí pasamos el nombre
             coins = this.coins,
             score = this.score,
             currentSkin = FindObjectOfType<ImageChanger>()?.currentIndex ?? 0,
             lastSave = System.DateTime.Now.ToString()
         };
 
-        // Convertir los datos a formato JSON
-        string json = JsonUtility.ToJson(data, true);
 
-        // Guardar el JSON en un archivo
-        string path = Path.Combine(Application.persistentDataPath, "player_save.json");
-        File.WriteAllText(path, json);
-        Debug.Log("¡Archivo JSON creado en: " + path);
-
-        // Enviar los datos a MongoDB
-        //if (mongoDbConnector != null)
-        //{
-            //await mongoDbConnector.EnviarDatosAMongoDB(data); // Enviar directamente el objeto playerData
-       // }
-        //else
-        //{
-            // Debug.LogError("El componente ConnectMongoDB no está asignado correctamente.");
-       // }
     }
 }
