@@ -1,18 +1,10 @@
 ﻿using System.Collections;
 using UnityEngine;
-<<<<<<< HEAD
 using UnityEngine.SceneManagement; // win 
 using static ShopManager;
 [RequireComponent(typeof(SpriteRenderer))]
 public class Frogger : MonoBehaviour
 {
-    // Las variables de estado actuales se mantienen
-=======
-
-[RequireComponent(typeof(SpriteRenderer))]
-public class SinFrogger : MonoBehaviour
-{
->>>>>>> origin/Monedas
     public Sprite idleSprite;
     public Sprite leapSprite;
     public Sprite deadSprite;
@@ -21,7 +13,6 @@ public class SinFrogger : MonoBehaviour
     private Vector3 spawnPosition;
     private float farthestRow;
     private bool cooldown;
-<<<<<<< HEAD
     private bool hasWon = false;
     public bool victoryEnabled = true;
 
@@ -51,8 +42,6 @@ public class SinFrogger : MonoBehaviour
         }
     }
 
-=======
->>>>>>> origin/Monedas
 
     private void Awake()
     {
@@ -62,11 +51,8 @@ public class SinFrogger : MonoBehaviour
 
     private void Update()
     {
-<<<<<<< HEAD
         //if (hasWon) return;
 
-=======
->>>>>>> origin/Monedas
         if (Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.UpArrow))
         {
             transform.rotation = Quaternion.Euler(0f, 0f, 0f);
@@ -89,56 +75,40 @@ public class SinFrogger : MonoBehaviour
         }
     }
 
-<<<<<<< HEAD
-
-=======
->>>>>>> origin/Monedas
     private void Move(Vector3 direction)
     {
         if (cooldown) return;
 
         Vector3 destination = transform.position + direction;
 
-<<<<<<< HEAD
+
         // Comprobar si hay colisión en el destino
-=======
-        // Check for collision at the destination
->>>>>>> origin/Monedas
+
         Collider2D platform = Physics2D.OverlapBox(destination, Vector2.zero, 0f, LayerMask.GetMask("Platform"));
         Collider2D obstacle = Physics2D.OverlapBox(destination, Vector2.zero, 0f, LayerMask.GetMask("Obstacle"));
         Collider2D barrier = Physics2D.OverlapBox(destination, Vector2.zero, 0f, LayerMask.GetMask("Barrier"));
 
-<<<<<<< HEAD
         // Impide cualquier movimiento si hay una barrera.
-=======
-        // Prevent any movement if there is a barrier
->>>>>>> origin/Monedas
+
         if (barrier != null) {
             return;
         }
 
-<<<<<<< HEAD
         // Conectar/desconectar Frogger de la plataforma
-=======
-        // Attach/detach frogger from the platform
->>>>>>> origin/Monedas
+
         if (platform != null) {
             transform.SetParent(platform.transform);
         } else {
             transform.SetParent(null);
         }
 
-<<<<<<< HEAD
         // Frogger muere cuando choca contra un obstáculo.
-=======
-        // Frogger dies when it hits an obstacle
->>>>>>> origin/Monedas
+
         if (obstacle != null && platform == null)
         {
             transform.position = destination;
             Death();
         }
-<<<<<<< HEAD
         // Las condiciones se cumplen, pasar al destino
         else
         {
@@ -150,19 +120,6 @@ public class SinFrogger : MonoBehaviour
             }
 
             // Iniciar animación de salto
-=======
-        // Conditions pass, move to the destination
-        else
-        {
-            // Check if we have advanced to a farther row
-            if (destination.y > farthestRow)
-            {
-                farthestRow = destination.y;
-                SinGameManager.Instance.AdvancedRow();
-            }
-
-            // Start leap animation
->>>>>>> origin/Monedas
             StopAllCoroutines();
             StartCoroutine(Leap(destination));
         }
@@ -175,32 +132,22 @@ public class SinFrogger : MonoBehaviour
         float elapsed = 0f;
         float duration = 0.125f;
 
-<<<<<<< HEAD
         // Establecer estado inicial
-=======
-        // Set initial state
->>>>>>> origin/Monedas
         spriteRenderer.sprite = leapSprite;
         cooldown = true;
 
         while (elapsed < duration)
         {
-<<<<<<< HEAD
             // Avanzar hacia el destino con el tiempo
-=======
-            // Move towards the destination over time
->>>>>>> origin/Monedas
+
             float t = elapsed / duration;
             transform.position = Vector3.Lerp(startPosition, destination, t);
             elapsed += Time.deltaTime;
             yield return null;
         }
 
-<<<<<<< HEAD
         // Establecer estado final
-=======
-        // Set final state
->>>>>>> origin/Monedas
+
         transform.position = destination;
         spriteRenderer.sprite = idleSprite;
         cooldown = false;
@@ -208,7 +155,7 @@ public class SinFrogger : MonoBehaviour
 
     public void Respawn()
     {
-<<<<<<< HEAD
+
         // Detener animaciones
         StopAllCoroutines();
 
@@ -220,19 +167,7 @@ public class SinFrogger : MonoBehaviour
         spriteRenderer.sprite = idleSprite;
 
         //Habilitar control
-=======
-        // Stop animations
-        StopAllCoroutines();
 
-        // Reset transform to spawn
-        transform.SetPositionAndRotation(spawnPosition, Quaternion.identity);
-        farthestRow = spawnPosition.y;
-
-        // Reset sprite
-        spriteRenderer.sprite = idleSprite;
-
-        // Enable control
->>>>>>> origin/Monedas
         gameObject.SetActive(true);
         enabled = true;
         cooldown = false;
@@ -240,7 +175,6 @@ public class SinFrogger : MonoBehaviour
 
     public void Death()
     {
-<<<<<<< HEAD
         // Detener animaciones
         StopAllCoroutines();
 
@@ -253,25 +187,11 @@ public class SinFrogger : MonoBehaviour
 
         //Actualiza el estado del juego
         GameManager.Instance.Died();
-=======
-        // Stop animations
-        StopAllCoroutines();
-
-        // Disable control
-        enabled = false;
-
-        // Display death sprite
-        transform.rotation = Quaternion.identity;
-        spriteRenderer.sprite = deadSprite;
-
-        // Update game state
-        SinGameManager.Instance.Died();
->>>>>>> origin/Monedas
     }
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-<<<<<<< HEAD
+
         /* Solo detecta Home si victoryEnabled está ACTIVADO
         if (victoryEnabled && other.gameObject.name == "Home" && !hasWon)
         {
@@ -281,39 +201,30 @@ public class SinFrogger : MonoBehaviour
         }*/
 
         // Lógica original de muerte
-        bool hitObstacle = other.gameObject.layer == LayerMask.NameToLayer("Obstacle");
-        bool onPlatform = transform.parent != null;
-
-        if (enabled && hitObstacle && !onPlatform)
         {
-=======
-        bool hitObstacle = other.gameObject.layer == LayerMask.NameToLayer("Obstacle");
-        bool onPlatform = transform.parent != null;
+            bool hitObstacle = other.gameObject.layer == LayerMask.NameToLayer("Obstacle");
+            bool onPlatform = transform.parent != null;
 
-        if (enabled && hitObstacle && !onPlatform) {
->>>>>>> origin/Monedas
-            Death();
+            if (enabled && hitObstacle && !onPlatform) {
+                Death();
+            }
         }
+
+        /*private void Win()
+        {
+            StopAllCoroutines();
+            enabled = false;
+
+            // Frogger desaparece
+            spriteRenderer.enabled = false;
+
+            // Opcional: desactivar collider
+            Collider2D col = GetComponent<Collider2D>();
+            if (col != null) col.enabled = false;
+
+            Debug.Log("¡FROGGER GANÓ!");
+
+
+        }*/
     }
-
-<<<<<<< HEAD
-    /*private void Win()
-    {
-        StopAllCoroutines();
-        enabled = false;
-
-        // Frogger desaparece
-        spriteRenderer.enabled = false;
-
-        // Opcional: desactivar collider
-        Collider2D col = GetComponent<Collider2D>();
-        if (col != null) col.enabled = false;
-
-        Debug.Log("¡FROGGER GANÓ!");
-
-       
-    }*/
 }
-=======
-}
->>>>>>> origin/Monedas

@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.IO;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using MongoDB.Bson;
 
@@ -179,7 +180,7 @@ public class GameManager : MonoBehaviour
         {
             if (Input.GetKeyDown(KeyCode.Return))
             {
-                NewGame();
+                SceneManager.LoadScene(2);
                 yield break;
             }
 
