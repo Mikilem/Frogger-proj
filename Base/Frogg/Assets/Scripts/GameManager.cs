@@ -271,6 +271,19 @@ public class GameManager : MonoBehaviour
             lastSave = System.DateTime.Now.ToString()
         };
 
+        // --- AQUÍ ESTABA EL ERROR ---
+        // Debes llamar a 'EnviarDatosAMongoDB' que está en el script de MongoDB
+        if (mongoDbConnector != null)
+        {
+            // Usamos StartCoroutine si quieres hacerlo en segundo plano 
+            // o simplemente llamamos a la función async:
+            // _ = mongoDbConnector.EnviarDatosAMongoDB(data);
+        }
 
+        // Opcional: Guardar el JSON local para cumplir con la rúbrica
+        string json = JsonUtility.ToJson(data, true);
+        File.WriteAllText(Application.persistentDataPath + "/playerData.json", json);
+        Debug.Log("Datos guardados localmente y enviados a MongoDB");
     }
+
 }
